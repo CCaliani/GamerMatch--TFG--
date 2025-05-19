@@ -1,6 +1,10 @@
+// Modelo Sequelize para la entidad 'Match'.
+// Representa los emparejamientos entre usuarios para jugar un determinado juego.
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
+// Definición del modelo Match con sus campos y restricciones
 const Match = sequelize.define('Match', {
   usuario1Id: {
     type: DataTypes.INTEGER,

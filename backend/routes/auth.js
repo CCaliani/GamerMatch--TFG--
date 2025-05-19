@@ -1,3 +1,5 @@
+// Rutas de autenticación para registro e inicio de sesión de usuarios.
+
 const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/Usuario');
@@ -5,7 +7,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const SECRET = process.env.JWT_SECRET || 'secreto';
-
 
 /**
  * @swagger
@@ -33,6 +34,7 @@ const SECRET = process.env.JWT_SECRET || 'secreto';
  *         description: Error de validación
  */
 
+// Registro de usuario
 router.post('/register', async (req, res) => {
   try {
     const { nombre, email, password, ...rest } = req.body;
@@ -45,6 +47,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// Inicio de sesión
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;

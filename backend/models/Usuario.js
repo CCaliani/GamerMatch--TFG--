@@ -1,6 +1,10 @@
+// Modelo Sequelize para la entidad 'Usuario'.
+// Define la estructura de los usuarios registrados en la plataforma.
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
+// Definición del modelo Usuario con sus campos y restricciones
 const Usuario = sequelize.define('Usuario', {
   nombre: {
     type: DataTypes.STRING,
@@ -38,6 +42,11 @@ const Usuario = sequelize.define('Usuario', {
   avatar: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  clerkUserId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
   }
 }, {
   tableName: 'usuarios'

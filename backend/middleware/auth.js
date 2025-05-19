@@ -16,7 +16,7 @@ const authMiddleware = require('../middleware/auth');
 
 router.post('/', authMiddleware, async (req, res) => {
   // req.user contiene los datos del usuario autenticado
-  // ...
+
 });
 
 module.exports = auth;

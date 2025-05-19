@@ -1,12 +1,4 @@
-<template>
-  <div v-if="show" class="cookie-consent">
-    <span>
-      Utilizamos cookies para mejorar tu experiencia. Consulta nuestra
-      <a href="#privacidad" target="_blank">política de privacidad</a>.
-    </span>
-    <button @click="acceptCookies">Aceptar</button>
-  </div>
-</template>
+<!-- Componente para mostrar el aviso de cookies y gestionar el consentimiento del usuario. -->
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -23,6 +15,16 @@ function acceptCookies() {
   show.value = false;
 }
 </script>
+
+<template>
+  <div v-if="show" class="cookie-consent">
+    <span>
+      Utilizamos cookies para mejorar tu experiencia. Consulta nuestra
+      <a href="#privacidad" target="_blank">política de privacidad</a>.
+    </span>
+    <button @click="acceptCookies">Aceptar</button>
+  </div>
+</template>
 
 <style scoped>
 .cookie-consent {

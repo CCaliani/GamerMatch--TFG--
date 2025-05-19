@@ -1,4 +1,6 @@
 <script setup>
+//Componenete de la barra de navegación con el logo, enlaces y botón de inicio de sesión.
+
   import { ref, computed, onMounted, onUnmounted } from 'vue';
   import { useUser, SignInButton, UserButton } from '@clerk/vue';
   import LoginButton from './icons/LoginButton.vue';

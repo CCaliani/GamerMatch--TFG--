@@ -1,4 +1,8 @@
 <script setup>
+//Componente de pantalla de "juego" para buscar jugadores y mostrar detalles de un jugador específico.
+// Este componente incluye un formulario para filtrar jugadores por juego, plataforma, idioma, región y nivel.
+// También muestra detalles del jugador seleccionado y permite enviar una solicitud para hablar por el chat.
+
 import { ref } from 'vue';
 import { useJugadoresApi } from '../composables/useJugadores';
 
@@ -128,156 +132,122 @@ function onBuscar() {
 </template>
 
 <style scoped>
-/* Contenedor principal: alinea el formulario y la tarjeta en columnas, igualando alturas */
 .main-flex {
-  display: flex;                /* Usa flexbox para columnas */
-  gap: 32px;                    /* Espacio entre columnas */
-  width: 100%;                  /* Ocupa todo el ancho disponible */
-  align-items: stretch;         /* Igual altura para hijos */
-  justify-content: center;      /* Centra horizontalmente el contenido */
-  min-height: 400px;            /* Altura mínima para el bloque */
-  box-sizing: border-box;       /* Incluye padding/border en el tamaño */
+  display: flex;
+  gap: 32px;
+  width: 100%;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 400px;
+  box-sizing: border-box;
 }
-
-/* Columna del formulario de búsqueda */
 .search-settings {
-  max-width: 400px;             /* Ancho máximo del formulario */
-  width: 100%;                  /* Ocupa todo el ancho posible hasta el máximo */
-  flex: 1 1 0;                  /* Toma menos espacio que la tarjeta */
-  display: flex;                /* Flexbox para organizar el contenido */
-  flex-direction: column;       /* Apila los hijos en columna */
-  background: rgba(255,255,255,0.08); /* Fondo translúcido */
-  padding: 24px;                /* Espaciado interno */
-  border-radius: 10px;          /* Bordes redondeados */
-  color: white;                 /* Texto blanco */
-  box-sizing: border-box;       /* Incluye padding/border en el tamaño */
-  /* NO height: 100% aquí para evitar recortes */
+  max-width: 400px;
+  width: 100%;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.08);
+  padding: 24px;
+  border-radius: 10px;
+  color: white;
+  box-sizing: border-box;
 }
-
-/* Formulario: apila los campos verticalmente y separa con espacio */
 form {
-  display: flex;                /* Flexbox para los campos */
-  flex-direction: column;       /* Apila los campos en columna */
-  gap: 10px;                    /* Espacio entre campos */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-
-/* Etiquetas del formulario: apila label y campo, y da estilo al texto */
 label {
-  display: flex;                /* Flexbox para label + input/select */
-  flex-direction: column;       /* Apila verticalmente */
-  font-size: 1.08rem;           /* Tamaño de fuente */
+  display: flex;
+  flex-direction: column;
+  font-size: 1.08rem;
   color: rgb(182, 176, 176);
-  gap: 4px;                     /* Espacio entre texto y campo */
+  gap: 4px;
 }
-
-/* Inputs y selects: estilo visual uniforme */
 input, select {
-  padding: 6px 10px;            /* Espaciado interno */
-  border-radius: 5px;           /* Bordes redondeados */
-  border: none;                 /* Sin borde por defecto */
-  font-size: 1rem;              /* Tamaño de fuente estándar */
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
 }
-
-/* Contenedor de la tarjeta y detalles del jugador */
 .player-layout {
-  flex: 2 1 0;                  /* Ocupa más espacio que el formulario */
-  display: flex;                /* Flexbox para tarjeta y detalles */
-  flex-direction: row;          /* Tarjeta y detalles en fila */
-  gap: 32px;                    /* Espacio entre tarjeta y detalles */
-  align-items: stretch;         /* Igual altura para hijos */
-  width: 100%;                  /* Ocupa todo el ancho disponible */
-  background: rgba(255,255,255,0.10); /* Fondo translúcido */
-  border-radius: 16px;          /* Bordes redondeados */
-  padding: 32px 24px;           /* Espaciado interno */
-  color: #fff;                /* Texto blanco */
-  box-sizing: border-box;       /* Incluye padding/border en el tamaño */
+  flex: 2 1 0;
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: stretch;
+  width: 100%;
+  background: rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 32px 24px;
+  color: #fff;
+  box-sizing: border-box;
 }
-
-/* Tarjeta del jugador: foto, nombre y descripción */
 .player-card {
-  display: flex;                /* Flexbox para contenido */
-  flex-direction: column;       /* Apila verticalmente */
-  align-items: center;          /* Centra horizontalmente */
-  background: rgba(212,1,183,0.10); /* Fondo translúcido */
-  border-radius: 12px;          /* Bordes redondeados */
-  padding: 36px 24px;           /* Espaciado interno */
-  min-width: 600px;             /* Ancho mínimo */
-  max-width: 900px;             /* Ancho máximo */
-  justify-content: center;      /* Centra verticalmente */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(212,1,183,0.10);
+  border-radius: 12px;
+  padding: 36px 24px;
+  min-width: 600px;
+  max-width: 900px;
+  justify-content: center;
 }
-
-/* Avatar del jugador */
 .player-avatar {
-  width: 110px;                 /* Tamaño fijo */
+  width: 110px;
   height: 110px;
-  border-radius: 50%;           /* Circular */
-  object-fit: cover;            /* Recorta la imagen */
-  border: 3px solid #d401b7;    /* Borde rosa */
-  margin-bottom: 18px;          /* Espacio debajo */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #d401b7;
+  margin-bottom: 18px;
 }
-
-/* Nombre del jugador en la tarjeta */
 .player-card h2 {
-  margin: 0 0 10px 0;           /* Espacio debajo */
-  font-size: 1.8rem;            /* Tamaño grande */
+  margin: 0 0 10px 0;
+  font-size: 1.8rem;
 }
-
-/* Descripción del jugador */
 .player-desc {
-  font-style: italic;           /* Cursiva */
-  opacity: 0.92;                /* Un poco translúcido */
-  text-align: center;           /* Centrado */
-  font-size: 1.08rem;           /* Tamaño de fuente */
+  font-style: italic;
+  opacity: 0.92;
+  text-align: center;
+  font-size: 1.08rem;
 }
-
 .search-settings h2{
   color:white;
-  font-size: 1.7rem;           /* Tamaño de fuente */
-  text-align: center;           /* Centrado */
+  font-size: 1.7rem;
+  text-align: center;
 }
-
-/* Detalles del jugador (plataforma, idioma, etc.) */
 .player-info {
-  flex: 2 1 0;                  /* Ocupa más espacio que la tarjeta */
-  background: rgba(0,0,0,0.08); /* Fondo translúcido oscuro */
-  border-radius: 12px;          /* Bordes redondeados */
-  padding: 24px 18px;           /* Espaciado interno */
-  display: flex;                /* Flexbox para contenido */
-  flex-direction: column;       /* Apila verticalmente */
-  justify-content: center;      /* Centra verticalmente */
+  flex: 2 1 0;
+  background: rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-
 .player-info h2 {
-  margin: 0 0 18px 0;           /* Espacio debajo */
-  font-size: 1.7rem;   /* Tamaño de fuente */
-  text-align: center; /* Centrado */
+  margin: 0 0 18px 0;
+  font-size: 1.7rem;
+  text-align: center;
 }
-
-/* Lista de detalles del jugador */
 .player-info ul {
-  list-style: none;             /* Sin viñetas */
+  list-style: none;
   padding: 0;
-  margin: 0 0 18px 0;           /* Espacio debajo */
+  margin: 0 0 18px 0;
 }
-
-/* Elementos de la lista de detalles */
 .player-info li {
-  margin-bottom: 10px;          /* Espacio entre detalles */
-  font-size: 1.08rem;           /* Tamaño de fuente */
+  margin-bottom: 10px;
+  font-size: 1.08rem;
 }
-
-/* Título de coincidencias */
 .player-matches h3 {
-  color: #d401b7;               /* Rosa */
-  margin-bottom: 6px;           /* Espacio debajo */
+  color: #d401b7;
+  margin-bottom: 6px;
 }
-
-/* Lista de coincidencias */
 .player-matches ul {
-  padding-left: 18px;           /* Sangría */
+  padding-left: 18px;
 }
-
-/* Placeholder vacío */
 .player-card.empty, .player-info.empty {
   opacity: 0.6;
   justify-content: center;
@@ -292,22 +262,20 @@ input, select {
   margin-bottom: 18px;
   display: inline-block;
 }
-
-/* Responsive: apila columnas en móvil */
 @media (max-width: 700px) {
   .main-flex {
-    flex-direction: column;     /* Apila formulario y tarjeta */
-    gap: 18px;                  /* Menos espacio entre bloques */
+    flex-direction: column;
+    gap: 18px;
     min-height: unset;
     height: auto;
   }
   .search-settings, .player-layout {
-    padding: 18px 8px;          /* Menos padding */
+    padding: 18px 8px;
     max-width: 100%;
     height: auto;
   }
   .player-layout {
-    flex-direction: column;     /* Apila tarjeta y detalles */
+    flex-direction: column;
   }
 }
 </style>

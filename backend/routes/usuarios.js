@@ -1,7 +1,17 @@
+// Rutas para la gestión de usuarios en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Usuario = require('../models/Usuario');
 const { Op } = require('sequelize');
+const clerkAuth = require('../middleware/clerkAuth');
+
+// Prueba directa de consulta
+Usuario.findAll().then(users => {
+  console.log('Usuarios en la base de datos:', users.length);
+}).catch(err => {
+  console.error('Error al consultar usuarios directamente:', err);
+});
 
 /**
  * @swagger
@@ -46,15 +56,18 @@ const { Op } = require('sequelize');
 // Obtener todos los usuarios (con filtros y paginación)
 router.get('/', async (req, res) => {
   try {
+    console.log('Entrando en GET /api/usuarios');
     const { page = 1, limit = 10, region, plataformaFavorita } = req.query;
     const where = {};
     if (region) where.region = region;
     if (plataformaFavorita) where.plataformaFavorita = plataformaFavorita;
+    console.log('Filtros:', where);
     const usuarios = await Usuario.findAndCountAll({
       where,
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit)
     });
+    console.log('Usuarios encontrados:', usuarios.rows.length);
     res.json({
       total: usuarios.count,
       page: parseInt(page),
@@ -62,6 +75,7 @@ router.get('/', async (req, res) => {
       data: usuarios.rows
     });
   } catch (err) {
+    console.error('Error en /api/usuarios:', err);
     res.status(500).json({ error: 'Error al obtener usuarios' });
   }
 });
@@ -112,6 +126,28 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Error al eliminar usuario' });
   }
+});
+
+// Obtener perfil de usuario
+router.get('/perfil', clerkAuth, async (req, res) => {
+  const clerkUserId = req.auth.userId;
+  let usuario = await Usuario.findOne({ where: { clerkUserId } });
+
+  if (!usuario) {
+    usuario = await Usuario.create({
+      clerkUserId,
+      email: req.auth.sessionClaims.email,
+      nombre: req.auth.sessionClaims.first_name,
+      avatar: req.auth.sessionClaims.profile_image_url,
+      edad: req.auth.sessionClaims.age,
+      idioma: req.auth.sessionClaims.language,
+      region: req.auth.sessionClaims.region,
+      plataformaFavorita: req.auth.sessionClaims.favorite_platform,
+      juegoFavorito: req.auth.sessionClaims.favorite_game
+    });
+  }
+
+  res.json(usuario);
 });
 
 module.exports = router;

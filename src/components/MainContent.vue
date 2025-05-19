@@ -1,4 +1,5 @@
 <script setup>
+//Contenido principal de la página de inicio, sin componentes adicionales.
 </script>
 
 <template>
@@ -7,7 +8,6 @@
     <p>Encuentra jugadores a tu gusto para disfrutar de tus juegos favoritos</p>
   </div>
 
-  <!--Como jugar y reglas básicas de la comunidad-->
   <div class="game-instructions">
     <img src="../assets/images/Como-jugar.jpg" alt="example" width="150px" height="150px"/>
   </div>
@@ -37,7 +37,7 @@
   width: 95%;
   display: flex;
   align-items: center;
-  gap: 32px;
+
 }
 
 .game-instructions img {

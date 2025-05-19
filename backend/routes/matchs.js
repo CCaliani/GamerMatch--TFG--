@@ -1,3 +1,5 @@
+// Rutas para la gestión de match en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Match = require('../models/Match');

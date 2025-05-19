@@ -1,6 +1,10 @@
+// Modelo Sequelize para la entidad 'Notificacion'.
+// Representa las notificaciones enviadas a los usuarios sobre eventos relevantes.
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
+// Definición del modelo Notificacion con sus campos y restricciones
 const Notificacion = sequelize.define('Notificacion', {
   usuarioId: {
     type: DataTypes.INTEGER,

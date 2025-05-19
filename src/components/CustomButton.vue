@@ -1,4 +1,5 @@
 <script setup>
+// Componente de botón personalizado reutilizable.
 </script>
 
 <template>

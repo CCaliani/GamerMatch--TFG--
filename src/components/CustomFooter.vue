@@ -1,3 +1,5 @@
+<!-- Componente de pie de página personalizado con enlaces y redes sociales. -->
+
 <template>
   <footer class="footer">
     <div class="footer-content">
@@ -78,12 +80,12 @@
 .icon {
   width: 28px;
   height: 28px;
-  fill: #d401b7;              /* Color inicial rosa */
-  color: #d401b7;             /* Para compatibilidad */
+  fill: #d401b7;
+  color: #d401b7;
   transition: color 0.2s, fill 0.2s;
 }
 .footer-social a:hover .icon {
-  color: #743179;             /* Hover más oscuro */
+  color: #743179;            
   fill: #743179;
 }
 .footer-copy {

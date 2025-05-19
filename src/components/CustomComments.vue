@@ -1,4 +1,6 @@
 <script setup>
+// Componente para mostrar comentarios destacados en un carrusel animado.
+
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const comments = ref([
@@ -44,7 +46,6 @@ function prev() {
 
 function slide() {
   isSliding.value = true;
-
 }
 
 // Auto-slide cada 10 segundos
@@ -56,7 +57,6 @@ onUnmounted(() => {
   clearInterval(interval);
 });
 </script>
-
 
 <template>
   <div class="comments-section">
@@ -83,8 +83,6 @@ onUnmounted(() => {
     <button class="arrow right" @click="next">&#8594;</button>
   </div>
 </template>
-
-
 
 <style scoped>
 .comments-section {

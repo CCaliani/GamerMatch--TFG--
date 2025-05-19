@@ -1,7 +1,8 @@
+// Rutas para la gestión de juegos en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Juego = require('../models/Juego');
-
 
 /**
  * @swagger

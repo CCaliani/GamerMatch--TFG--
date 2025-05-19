@@ -1,3 +1,5 @@
+// Configuración de Swagger para la documentación de la API.
+
 const swaggerJSDoc = require('swagger-jsdoc');
 
 const options = {
@@ -12,7 +14,7 @@ const options = {
       { url: 'http://localhost:3000' }
     ]
   },
-  apis: ['./routes/*.js'], // Asegúrate de que la ruta es correcta
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

@@ -1,3 +1,80 @@
+<!--Componenete del chat en vivo-->
+
+<script setup>
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
+
+const isOpen = ref(false);
+const input = ref('');
+const messages = ref([]);
+const hasNotification = ref(false);
+
+const myId = Math.floor(Math.random() * 1000000);
+const user = 'Invitado' + myId;
+const myStatus = ref('disponible');
+
+const users = ref([
+
+  { id: myId, name: user, status: myStatus.value }
+]);
+
+function toggleChat() {
+  isOpen.value = !isOpen.value;
+  if (isOpen.value) {
+    hasNotification.value = false;
+    nextTick(() => {
+      scrollToBottom();
+    });
+  }
+}
+
+function sendMessage() {
+  if (input.value.trim()) {
+    socket.emit('chat-message', { user, text: input.value });
+    input.value = '';
+  }
+}
+
+function scrollToBottom() {
+  const el = document.querySelector('.chat-messages');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+function getUserStatus(name) {
+  const u = users.value.find(u => u.name === name);
+  return u ? u.status : 'desconectado';
+}
+
+onMounted(() => {
+  // Notifica el estado al conectarse
+  socket.emit('user-join', { id: myId, name: user, status: myStatus.value });
+
+  socket.on('chat-message', (msg) => {
+    messages.value.push(msg);
+    if (!isOpen.value) {
+      hasNotification.value = true;
+    }
+    nextTick(scrollToBottom);
+  });
+
+  socket.on('users-update', (userList) => {
+    users.value = userList;
+  });
+
+  // Cambia el estado y se notifica
+  watch(myStatus, (newStatus) => {
+    socket.emit('status-update', { id: myId, name: user, status: newStatus });
+  });
+});
+
+onUnmounted(() => {
+  socket.off('chat-message');
+  socket.off('users-update');
+});
+</script>
+
 <template>
   <div class="chat-widget" :class="{ open: isOpen }">
     <div class="chat-header" @click="toggleChat">
@@ -57,81 +134,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { io } from 'socket.io-client';
-
-const socket = io('http://localhost:3000');
-
-const isOpen = ref(false);
-const input = ref('');
-const messages = ref([]);
-const hasNotification = ref(false);
-
-const myId = Math.floor(Math.random() * 1000000);
-const user = 'Invitado' + myId;
-const myStatus = ref('disponible');
-
-const users = ref([
-  // Ejemplo inicial, se actualizará con socket.io
-  { id: myId, name: user, status: myStatus.value }
-]);
-
-function toggleChat() {
-  isOpen.value = !isOpen.value;
-  if (isOpen.value) {
-    hasNotification.value = false;
-    nextTick(() => {
-      scrollToBottom();
-    });
-  }
-}
-
-function sendMessage() {
-  if (input.value.trim()) {
-    socket.emit('chat-message', { user, text: input.value });
-    input.value = '';
-  }
-}
-
-function scrollToBottom() {
-  const el = document.querySelector('.chat-messages');
-  if (el) el.scrollTop = el.scrollHeight;
-}
-
-function getUserStatus(name) {
-  const u = users.value.find(u => u.name === name);
-  return u ? u.status : 'desconectado';
-}
-
-onMounted(() => {
-  // Notifica tu presencia y estado al conectar
-  socket.emit('user-join', { id: myId, name: user, status: myStatus.value });
-
-  socket.on('chat-message', (msg) => {
-    messages.value.push(msg);
-    if (!isOpen.value) {
-      hasNotification.value = true;
-    }
-    nextTick(scrollToBottom);
-  });
-
-  socket.on('users-update', (userList) => {
-    users.value = userList;
-  });
-
-  // Cambia tu estado y notifícalo
-  watch(myStatus, (newStatus) => {
-    socket.emit('status-update', { id: myId, name: user, status: newStatus });
-  });
-});
-
-onUnmounted(() => {
-  socket.off('chat-message');
-  socket.off('users-update');
-});
-</script>
 
 <style scoped>
 .chat-widget {

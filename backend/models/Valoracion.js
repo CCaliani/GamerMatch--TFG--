@@ -1,6 +1,10 @@
+// Modelo Sequelize para la entidad 'Valoracion'.
+// Representa las valoraciones realizadas entre usuarios después de un match.
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
+// Definición del modelo Valoracion con sus campos y restricciones
 const Valoracion = sequelize.define('Valoracion', {
   matchId: {
     type: DataTypes.INTEGER,

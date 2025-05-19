@@ -1,4 +1,7 @@
 <script setup>
+// Componente principal de la aplicación GamerMatch.
+// Aquí se importan y utilizan los componentes globales de la plataforma.
+
 import CustomComments from './components/CustomComments.vue';
 import CustomFooter from './components/CustomFooter.vue';
 import FormComment from './components/FormComment.vue';
@@ -10,15 +13,18 @@ import CookieConsent from './components/CookieConsent.vue';
 </script>
 
 <template>
+  <!--Encabezado y barra de navegación-->
   <header>
     <NavBar />
   </header>
   <main>
+    <!-- Sección principal de la aplicación -->
         <section id="video">
     <MainContent />
         </section>
 
     <div class="main-flex">
+      <!-- Sección de búsqueda de jugadores -->
       <section id="jugar">
     <WindowsGame />
       </section>
@@ -45,12 +51,14 @@ import CookieConsent from './components/CookieConsent.vue';
       </section>
     </div>
         <section id="comunidad">
+          <!-- Sección de comentarios y valoraciones -->
               <CustomComments />
     <FormComment @nuevo-comentario="addComment" />
         </section>
 
 
   </main>
+    <!--Sección del caht en vivo y consentimiento de cookies-->
       <LiveChat />
       <CookieConsent />
   <footer>

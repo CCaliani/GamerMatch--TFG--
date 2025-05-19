@@ -1,3 +1,7 @@
+// Punto de entrada principal de la aplicación Vue.
+// Aquí se importan los estilos globales, se configura Pinia para el estado global
+// y Clerk para la autenticación, y se monta el componente raíz App.
+
 import './assets/main.css'
 
 import { createApp } from 'vue'

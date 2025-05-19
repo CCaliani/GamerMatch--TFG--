@@ -1,6 +1,10 @@
+// Modelo Sequelize para la entidad 'Solicitud'.
+// Representa las solicitudes de amistad o juego entre usuarios.
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
+// Definición del modelo Solicitud con sus campos y restricciones
 const Solicitud = sequelize.define('Solicitud', {
   usuarioEmisorId: {
     type: DataTypes.INTEGER,

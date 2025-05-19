@@ -1,3 +1,5 @@
+<!-- Componente de edición de perfil. -->
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUser } from '@clerk/vue';

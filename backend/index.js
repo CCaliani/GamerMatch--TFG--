@@ -1,3 +1,6 @@
+// Archivo principal del servidor Express y Socket.IO para GamerMatch.
+// Configura middlewares, rutas, documentación Swagger y la integración con WebSockets.
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -19,7 +22,7 @@ const swaggerSpec = require('./swagger');
 const app = express();
 const PORT = 3000;
 
-app.use(cors({ origin: 'http://localhost:5173' })); // Cambia por tu frontend en producción
+app.use(cors({ origin: 'http://localhost:5173' })); // Cambiar por el frontend en producción
 app.use(express.json());
 app.use('/api/comentarios', comentariosRouter);
 app.use('/api/usuarios', usuariosRouter);

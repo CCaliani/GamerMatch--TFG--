@@ -1,3 +1,5 @@
+// Rutas para la gestión de comentarios en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Comentario = require('../models/Comentario');

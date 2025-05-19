@@ -1,4 +1,6 @@
 <script setup>
+// Componente para enviar un nuevo comentario y valoración.
+
 import { ref } from 'vue';
 
 const emit = defineEmits(['nuevo-comentario']);
@@ -63,118 +65,93 @@ function enviarComentario() {
 </template>
 
 <style scoped>
-/* Contenedor principal del formulario de comentarios */
 .form-comment {
-  background: rgba(255, 255, 255, 0.08); /* Fondo translúcido */
-  padding: 2rem 1.5rem;                  /* Espaciado interno */
-  border-radius: 16px;                   /* Bordes redondeados */
-  max-width: 100vw;                      /* No sobrepasa el ancho de la ventana */
-  width: 70vw;                           /* Ocupa el 70% del ancho de la ventana */
-  margin: 3rem auto 2rem auto;           /* Centrado horizontal y margen superior e inferior */
-  color: #fff;                           /* Texto blanco */
-  display: flex;                         /* Flexbox para apilar título y campos */
-  flex-direction: column;                /* Apila verticalmente */
-  gap: 0.7rem;                           /* Espacio entre título y campos */
-  box-sizing: border-box;                /* Incluye padding y borde en el tamaño */
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  max-width: 100vw;
+  width: 70vw;
+  margin: 3rem auto 2rem auto;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  box-sizing: border-box;
 }
-
-/* Contenedor del título del formulario */
 .form-title {
-  align-self: flex-start;                /* Alinea el título a la izquierda */
+  align-self: flex-start;
 }
-
-/* Estilo del título */
 .form-title h2 {
-  font-size: 1.4rem;                     /* Tamaño de fuente del título */
+  font-size: 1.4rem;
 }
-
-/* Fila que contiene todos los campos del formulario en horizontal */
 .form-fields-row {
-  display: flex;                         /* Flexbox para los campos */
-  flex-direction: column 4;                   /* Alinea los campos en fila */
-  gap: 1.1rem;                           /* Espacio entre columnas */
-  align-items: center;                 /* Alinea los campos al fondo */
-  width: 100%;                           /* Ocupa todo el ancho disponible */
+  display: flex;
+  flex-direction: column 4;
+  gap: 1.1rem;
+  align-items: center;
+  width: 100%;
 }
-
-/* Columna individual para cada campo */
 .form-col {
-  display: flex;                         /* Flexbox para apilar label y campo */
-  flex-direction: column;                /* Apila verticalmente */
-  flex: 1 1 0;                           /* Crece igual que las demás columnas */
-  min-width: 0;                          /* Permite que se reduzca el ancho */
-  gap: 0.3rem;                           /* Espacio entre label y campo */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 0.3rem;
 }
-
-/* Estilo para las etiquetas de los campos */
 .form-col label {
-  font-size: 1rem;                       /* Tamaño de fuente estándar */
-  gap: 0.3rem;                           /* Espacio entre texto y campo */
+  font-size: 1rem;
+  gap: 0.3rem;
 }
-
-/* Estilos generales para los inputs, selects y textarea */
 .form-comment input,
 .form-comment select,
 .form-comment textarea {
-  border-radius: 6px;                    /* Bordes redondeados */
-  border: none;                          /* Sin borde por defecto */
-  padding: 0.5rem;                       /* Espaciado interno */
-  font-size: 1rem;                       /* Tamaño de fuente */
-  margin-top: 0.2rem;                    /* Espacio arriba del campo */
-  width: 100%;                           /* Ocupa todo el ancho de la columna */
-  box-sizing: border-box;                /* Incluye padding en el tamaño */
+  border-radius: 6px;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-top: 0.2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
-
-/* Estilo específico para el textarea */
 .form-comment textarea {
-  min-height: 60px;                      /* Altura mínima */
-  max-height: 140px;                     /* Altura máxima */
-  resize: none;                         /* Sin opción de redimensionar */
+  min-height: 60px;
+  max-height: 140px;
+  resize: none;
 }
-
-/* Columna de acciones (botón y mensaje) */
 .form-actions {
-  align-items: flex-end;                 /* Alinea el botón al fondo */
-  justify-content: flex-end;             /* Alinea el contenido a la derecha */
+  align-items: flex-end;
+  justify-content: flex-end;
 }
-
-/* Estilo del botón de enviar */
 .form-comment button {
-  background: #d401b7;                   /* Fondo rosa */
-  color: #fff;                           /* Texto blanco */
-  border: none;                          /* Sin borde */
-  border-radius: 6px;                    /* Bordes redondeados */
-  padding: 0.7rem 1.2rem;                /* Espaciado interno */
-  font-size: 1.1rem;                     /* Tamaño de fuente */
-  cursor: pointer;                       /* Cursor de mano */
-  margin-top: 0.5rem;                    /* Espacio arriba del botón */
-  transition: background 0.2s;           /* Transición suave al pasar el mouse */
-  width: 100%;                           /* Ocupa todo el ancho de la columna */
+  background: #d401b7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+  width: 100%;
 }
-
-/* Efecto hover para el botón */
 .form-comment button:hover {
-  background: #743179;                   /* Cambia a morado oscuro */
+  background: #743179;
 }
-
-/* Mensaje de confirmación o error */
 .mensaje {
-  margin-top: 0.7rem;                    /* Espacio arriba del mensaje */
-  color: #ffd700;                        /* Color dorado */
-  text-align: center;                    /* Centrado */
-  font-size: 1rem;                       /* Tamaño de fuente */
+  margin-top: 0.7rem;
+  color: #ffd700;
+  text-align: center;
+  font-size: 1rem;
 }
-
-/* Responsive: apila los campos en columna en pantallas pequeñas */
 @media (max-width: 900px) {
   .form-fields-row {
-    flex-direction: column;              /* Apila los campos verticalmente */
-    gap: 0.7rem;                         /* Espacio entre campos */
-    align-items: stretch;                /* Estira los campos */
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: stretch;
   }
   .form-comment {
-    width: 98vw;                         /* Ocupa casi todo el ancho */
-    max-width: 100vw;                    /* No sobrepasa el ancho de la ventana */
+    width: 98vw;
+    max-width: 100vw;
   }
 }
 </style>

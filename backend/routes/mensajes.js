@@ -1,3 +1,5 @@
+// Rutas para la gestión de mensajes en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Mensaje = require('../models/Mensaje');

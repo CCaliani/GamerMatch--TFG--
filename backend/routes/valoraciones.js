@@ -1,3 +1,5 @@
+// Rutas para la gestión de las valoraciones en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Valoracion = require('../models/Valoracion');

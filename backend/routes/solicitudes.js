@@ -1,3 +1,5 @@
+// Rutas para la gestión de solicitudes en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Solicitud = require('../models/Solicitud');

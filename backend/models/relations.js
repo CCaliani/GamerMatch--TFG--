@@ -1,3 +1,6 @@
+// Definición de relaciones entre los modelos de la base de datos.
+// Establece las asociaciones entre usuarios, juegos, solicitudes, matchs, mensajes, valoraciones, notificaciones y comentarios.
+
 const Usuario = require('./Usuario');
 const Juego = require('./Juego');
 const Solicitud = require('./Solicitud');

@@ -1,3 +1,5 @@
+// Rutas para la gestión de notificaciones en la plataforma.
+
 const express = require('express');
 const router = express.Router();
 const Notificacion = require('../models/Notificacion');
