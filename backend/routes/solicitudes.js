@@ -1,9 +1,10 @@
 // Rutas para la gestión de solicitudes en la plataforma.
 
-const express = require('express');
+import express from 'express';
+import Solicitud from '../models/Solicitud.js';
+import { Op } from 'sequelize';
+
 const router = express.Router();
-const Solicitud = require('../models/Solicitud');
-const { Op } = require('sequelize');
 
 /**
  * @swagger
@@ -93,7 +94,7 @@ router.get('/', async (req, res) => {
     }
     const solicitudes = await Solicitud.findAll({ where });
     res.json(solicitudes);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener solicitudes' });
   }
 });
@@ -110,7 +111,7 @@ router.post('/', async (req, res) => {
     }
     const solicitud = await Solicitud.create({ usuarioEmisorId, usuarioReceptorId });
     res.status(201).json(solicitud);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al crear solicitud' });
   }
 });
@@ -127,9 +128,8 @@ router.put('/:id', async (req, res) => {
     solicitud.estado = estado;
     await solicitud.save();
     res.json(solicitud);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al actualizar solicitud' });
   }
 });
-
-module.exports = router;
+export default router;

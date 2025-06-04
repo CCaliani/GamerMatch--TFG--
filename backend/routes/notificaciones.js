@@ -1,8 +1,8 @@
 // Rutas para la gestión de notificaciones en la plataforma.
 
-const express = require('express');
-const router = express.Router();
-const Notificacion = require('../models/Notificacion');
+import { Router } from 'express'
+const router = Router()
+import Notificacion from '../models/Notificacion.js'
 
 /**
  * @swagger
@@ -80,43 +80,43 @@ const Notificacion = require('../models/Notificacion');
 // Obtener todas las notificaciones de un usuario
 router.get('/', async (req, res) => {
   try {
-    const { usuarioId } = req.query;
-    if (!usuarioId) return res.status(400).json({ error: 'usuarioId es requerido' });
+    const { usuarioId } = req.query
+    if (!usuarioId) return res.status(400).json({ error: 'usuarioId es requerido' })
     const notificaciones = await Notificacion.findAll({
       where: { usuarioId },
-      order: [['fecha', 'DESC']]
-    });
-    res.json(notificaciones);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al obtener notificaciones' });
+      order: [['fecha', 'DESC']],
+    })
+    res.json(notificaciones)
+  } catch {
+    res.status(500).json({ error: 'Error al obtener notificaciones' })
   }
-});
+})
 
 // Crear una nueva notificación
 router.post('/', async (req, res) => {
   try {
-    const { usuarioId, tipo, mensaje } = req.body;
+    const { usuarioId, tipo, mensaje } = req.body
     if (!usuarioId || !tipo || !mensaje) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+      return res.status(400).json({ error: 'Faltan campos obligatorios' })
     }
-    const notificacion = await Notificacion.create({ usuarioId, tipo, mensaje });
-    res.status(201).json(notificacion);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al crear notificación' });
+    const notificacion = await Notificacion.create({ usuarioId, tipo, mensaje })
+    res.status(201).json(notificacion)
+  } catch {
+    res.status(500).json({ error: 'Error al crear notificación' })
   }
-});
+})
 
 // Marcar una notificación como leída
 router.put('/:id', async (req, res) => {
   try {
-    const notificacion = await Notificacion.findByPk(req.params.id);
-    if (!notificacion) return res.status(404).json({ error: 'Notificación no encontrada' });
-    notificacion.leida = true;
-    await notificacion.save();
-    res.json(notificacion);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al actualizar notificación' });
+    const notificacion = await Notificacion.findByPk(req.params.id)
+    if (!notificacion) return res.status(404).json({ error: 'Notificación no encontrada' })
+    notificacion.leida = true
+    await notificacion.save()
+    res.json(notificacion)
+  } catch {
+    res.status(500).json({ error: 'Error al actualizar notificación' })
   }
-});
+})
 
-module.exports = router;
+export default router

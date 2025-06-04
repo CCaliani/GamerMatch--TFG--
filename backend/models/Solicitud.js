@@ -1,8 +1,8 @@
 // Modelo Sequelize para la entidad 'Solicitud'.
 // Representa las solicitudes de amistad o juego entre usuarios.
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+import { DataTypes } from 'sequelize';
+import sequelize from '../db.js';
 
 // Definición del modelo Solicitud con sus campos y restricciones
 const Solicitud = sequelize.define('Solicitud', {
@@ -26,4 +26,4 @@ const Solicitud = sequelize.define('Solicitud', {
   tableName: 'solicitudes'
 });
 
-module.exports = Solicitud;
+export default Solicitud;

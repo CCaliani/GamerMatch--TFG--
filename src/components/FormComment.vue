@@ -1,31 +1,31 @@
 <script setup>
 // Componente para enviar un nuevo comentario y valoración.
 
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const emit = defineEmits(['nuevo-comentario']);
+const emit = defineEmits(['nuevo-comentario'])
 
-const nombre = ref('');
-const valoracion = ref('');
-const comentario = ref('');
-const mensaje = ref('');
+const nombre = ref('')
+const valoracion = ref('')
+const comentario = ref('')
+const mensaje = ref('')
 
 function enviarComentario() {
   if (!nombre.value || !valoracion.value || !comentario.value) {
-    mensaje.value = 'Por favor, completa todos los campos.';
-    return;
+    mensaje.value = 'Por favor, completa todos los campos.'
+    return
   }
   emit('nuevo-comentario', {
     user: nombre.value,
     rating: valoracion.value,
     text: comentario.value,
-    id: Date.now()
-  });
-  mensaje.value = '¡Gracias por tu comentario!';
-  nombre.value = '';
-  valoracion.value = '';
-  comentario.value = '';
-  setTimeout(() => mensaje.value = '', 2000);
+    id: Date.now(),
+  })
+  mensaje.value = '¡Gracias por tu comentario!'
+  nombre.value = ''
+  valoracion.value = ''
+  comentario.value = ''
+  setTimeout(() => (mensaje.value = ''), 2000)
 }
 </script>
 
@@ -53,7 +53,12 @@ function enviarComentario() {
       <div class="form-col">
         <label>
           Comentario:
-          <textarea v-model="comentario" required maxlength="120" placeholder="¿Qué opinas de la web?"></textarea>
+          <textarea
+            v-model="comentario"
+            required
+            maxlength="120"
+            placeholder="¿Qué opinas de la web?"
+          ></textarea>
         </label>
       </div>
       <div class="form-col form-actions">
@@ -150,8 +155,16 @@ function enviarComentario() {
     align-items: stretch;
   }
   .form-comment {
+    width: 100vw;
+    max-width: 100vw;
+  }
+}
+@media (max-width: 700px) {
+  .form-comment {
     width: 98vw;
     max-width: 100vw;
+    margin: 1.5rem auto 0 auto;
+    border-radius: 8px;
   }
 }
 </style>

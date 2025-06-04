@@ -1,8 +1,8 @@
 // Rutas para la gestión de mensajes en la plataforma.
 
-const express = require('express');
-const router = express.Router();
-const Mensaje = require('../models/Mensaje');
+import { Router } from 'express'
+const router = Router()
+import Mensaje from '../models/Mensaje.js'
 
 /**
  * @swagger
@@ -52,30 +52,30 @@ const Mensaje = require('../models/Mensaje');
 // Obtener todos los mensajes de un match
 router.get('/', async (req, res) => {
   try {
-    const { matchId } = req.query;
-    if (!matchId) return res.status(400).json({ error: 'matchId es requerido' });
-    const mensajes = await Mensaje.findAll({ where: { matchId }, order: [['timestamp', 'ASC']] });
-    res.json(mensajes);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al obtener mensajes' });
+    const { matchId } = req.query
+    if (!matchId) return res.status(400).json({ error: 'matchId es requerido' })
+    const mensajes = await Mensaje.findAll({ where: { matchId }, order: [['timestamp', 'ASC']] })
+    res.json(mensajes)
+  } catch {
+    res.status(500).json({ error: 'Error al obtener mensajes' })
   }
-});
+})
 
 // Crear un nuevo mensaje
 router.post('/', async (req, res) => {
   try {
-    const { matchId, usuarioId, texto } = req.body;
+    const { matchId, usuarioId, texto } = req.body
     if (!matchId || !usuarioId || !texto) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+      return res.status(400).json({ error: 'Faltan campos obligatorios' })
     }
     if (texto.length > 1000) {
-      return res.status(400).json({ error: 'El mensaje es demasiado largo' });
+      return res.status(400).json({ error: 'El mensaje es demasiado largo' })
     }
-    const mensaje = await Mensaje.create({ matchId, usuarioId, texto });
-    res.status(201).json(mensaje);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al crear mensaje' });
+    const mensaje = await Mensaje.create({ matchId, usuarioId, texto })
+    res.status(201).json(mensaje)
+  } catch {
+    res.status(500).json({ error: 'Error al crear mensaje' })
   }
-});
+})
 
-module.exports = router;
+export default router

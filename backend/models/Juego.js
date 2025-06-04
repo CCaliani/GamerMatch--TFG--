@@ -1,14 +1,14 @@
 // Modelo Sequelize para la entidad 'Juego'.
 // Define la estructura de los juegos disponibles en la plataforma.
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+import { DataTypes } from 'sequelize';
+import sequelize from '../db.js';
 
 // Definición del modelo Juego con sus campos y restricciones
 const Juego = sequelize.define('Juego', {
   nombre: {
     type: DataTypes.STRING,
-    allowNull: false 
+    allowNull: false
   },
   plataforma: {
     type: DataTypes.STRING,
@@ -26,4 +26,4 @@ const Juego = sequelize.define('Juego', {
   tableName: 'juegos'
 });
 
-module.exports = Juego;
+export default Juego;

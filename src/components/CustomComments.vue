@@ -1,10 +1,16 @@
 <script setup>
 // Componente para mostrar comentarios destacados en un carrusel animado.
 
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import FormComment from './FormComment.vue'
 
 const comments = ref([
-  { id: 1, user: 'Ana', rating: 5, text: '¡Excelente plataforma para encontrar compañeros de juego!' },
+  {
+    id: 1,
+    user: 'Ana',
+    rating: 5,
+    text: '¡Excelente plataforma para encontrar compañeros de juego!',
+  },
   { id: 2, user: 'Luis', rating: 4, text: 'Muy útil y fácil de usar.' },
   { id: 3, user: 'Sara', rating: 5, text: 'Me encanta la comunidad.' },
   { id: 4, user: 'Pedro', rating: 3, text: 'Podría mejorar la búsqueda.' },
@@ -13,49 +19,55 @@ const comments = ref([
   { id: 7, user: 'Clara', rating: 5, text: 'Me gusta la variedad de juegos.' },
   { id: 8, user: 'David', rating: 4, text: 'Fácil de navegar y encontrar jugadores.' },
   { id: 9, user: 'Laura', rating: 5, text: 'Gran comunidad y soporte.' },
-]);
+])
 
-const current = ref(0);
-const isSliding = ref(false);
-const slideDirection = ref('left');
+const current = ref(0)
+const isSliding = ref(false)
+const slideDirection = ref('left')
 
 const visibleComments = computed(() => {
-  const arr = [];
+  const arr = []
   for (let i = 0; i < 3; i++) {
-    arr.push(comments.value[(current.value + i) % comments.value.length]);
+    arr.push(comments.value[(current.value + i) % comments.value.length])
   }
-  return arr;
-});
+  return arr
+})
 
 function next() {
-  slideDirection.value = 'left';
-  slide();
+  slideDirection.value = 'left'
+  slide()
   setTimeout(() => {
-    current.value = (current.value + 1) % comments.value.length;
-    isSliding.value = false;
-  }, 500);
+    current.value = (current.value + 3) % comments.value.length
+    isSliding.value = false
+  }, 500)
 }
 function prev() {
-  slideDirection.value = 'right';
-  slide();
+  slideDirection.value = 'right'
+  slide()
   setTimeout(() => {
-    current.value = (current.value - 1 + comments.value.length) % comments.value.length;
-    isSliding.value = false;
-  }, 500);
+    current.value = (current.value - 3 + comments.value.length) % comments.value.length
+    isSliding.value = false
+  }, 500)
 }
 
 function slide() {
-  isSliding.value = true;
+  isSliding.value = true
+}
+
+function agregarComentario(nuevoComentario) {
+  comments.value.push(nuevoComentario)
+
+  current.value = (current.value + 1) % comments.value.length
 }
 
 // Auto-slide cada 10 segundos
-let interval = null;
+let interval = null
 onMounted(() => {
-  interval = setInterval(next, 10000);
-});
+  interval = setInterval(next, 10000)
+})
 onUnmounted(() => {
-  clearInterval(interval);
-});
+  clearInterval(interval)
+})
 </script>
 
 <template>
@@ -65,14 +77,10 @@ onUnmounted(() => {
       class="comments-carousel"
       :class="{
         'slide-left': isSliding && slideDirection === 'left',
-        'slide-right': isSliding && slideDirection === 'right'
+        'slide-right': isSliding && slideDirection === 'right',
       }"
     >
-      <div
-        class="comment"
-        v-for="comment in visibleComments"
-        :key="comment.id"
-      >
+      <div class="comment" v-for="comment in visibleComments" :key="comment.id">
         <div class="comment-header">
           <span class="comment-user">{{ comment.user }}</span>
           <span class="comment-rating">⭐ {{ comment.rating }}</span>
@@ -82,6 +90,7 @@ onUnmounted(() => {
     </div>
     <button class="arrow right" @click="next">&#8594;</button>
   </div>
+  <FormComment @nuevo-comentario="agregarComentario" />
 </template>
 
 <style scoped>
@@ -106,7 +115,7 @@ onUnmounted(() => {
   width: 70vw;
   justify-content: center;
   align-items: stretch;
-  transition: transform 0.5s cubic-bezier(.77,0,.18,1);
+  transition: transform 0.5s cubic-bezier(0.77, 0, 0.18, 1);
   will-change: transform;
 }
 
@@ -124,18 +133,23 @@ onUnmounted(() => {
 }
 
 .comment {
-  background: rgba(32,0,25,0.80);
+  background: rgba(32, 0, 25, 0.8);
   border-radius: 18px;
   padding: 2.2rem 1.8rem;
   min-width: 320px;
   max-width: 420px;
   flex: 1 1 0;
   color: #fff;
-  box-shadow: 0 2px 18px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   font-size: 1.35rem;
+  min-height: 210px;
+  max-height: 210px;
+  overflow: hidden;
+  text-align: center;
 }
 
 .comment-header {
@@ -171,8 +185,11 @@ onUnmounted(() => {
   padding: 0.7rem 1.1rem;
   border-radius: 50%;
   margin: 0 1.2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,21 +205,22 @@ onUnmounted(() => {
 
 @media (max-width: 900px) {
   .comments-carousel {
-    width: 98vw;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     gap: 1rem;
+    width: 98vw;
+    padding-bottom: 8px;
   }
   .comment {
-    min-width: 180px;
-    max-width: 220px;
-    padding: 1.2rem 0.7rem;
-    font-size: 1rem;
+    min-width: 220px;
+    max-width: 80vw;
+    scroll-snap-align: center;
   }
+}
+@media (max-width: 700px) {
   .arrow {
-    font-size: 1.6rem;
-    padding: 0.5rem 0.7rem;
-    margin: 0 0.5rem;
-    height: 40px;
-    min-width: 40px;
+    display: none !important;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 // Configuración de Swagger para la documentación de la API.
 
-const swaggerJSDoc = require('swagger-jsdoc');
+import swaggerJSDoc from 'swagger-jsdoc';
 
 const options = {
   definition: {
@@ -19,4 +19,4 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
-module.exports = swaggerSpec;
+export default swaggerSpec;

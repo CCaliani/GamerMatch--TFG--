@@ -1,8 +1,8 @@
 // Modelo Sequelize para la entidad 'Mensaje'.
 // Representa los mensajes enviados entre usuarios dentro de un match.
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+import { DataTypes } from 'sequelize';
+import sequelize from '../db.js';
 
 // Definición del modelo Mensaje con sus campos y restricciones
 const Mensaje = sequelize.define('Mensaje', {
@@ -26,4 +26,5 @@ const Mensaje = sequelize.define('Mensaje', {
   tableName: 'mensajes'
 });
 
-module.exports = Mensaje;
+
+export default Mensaje;

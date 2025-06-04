@@ -2,14 +2,42 @@
 // Componente principal de la aplicación GamerMatch.
 // Aquí se importan y utilizan los componentes globales de la plataforma.
 
-import CustomComments from './components/CustomComments.vue';
-import CustomFooter from './components/CustomFooter.vue';
-import FormComment from './components/FormComment.vue';
+import CustomComments from './components/CustomComments.vue'
+import CustomFooter from './components/CustomFooter.vue'
 import MainContent from './components/MainContent.vue'
-import NavBar from './components/NavBar.vue';
-import WindowsGame from './components/WindowsGame.vue';
-import LiveChat from './components/LiveChat.vue';
-import CookieConsent from './components/CookieConsent.vue';
+import NavBar from './components/NavBar.vue'
+import WindowsGame from './components/WindowsGame.vue'
+import LiveChat from './components/LiveChat.vue'
+import CookieConsent from './components/CookieConsent.vue'
+import { watch } from 'vue'
+import { useUser } from '@clerk/vue'
+
+const { user, isSignedIn } = useUser()
+
+async function syncUsuarioConBackend() {
+  if (!user.value) return
+  await fetch('http://localhost:3000/api/usuarios', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      clerkUserId: user.value.id,
+      nombre: user.value.firstName || user.value.username || 'SinNombre',
+      password: 'clerk',
+      edad: user.value.publicMetadata?.edad || 18,
+      idioma: user.value.publicMetadata?.idioma || 'Español',
+      region: user.value.publicMetadata?.region || 'Europa',
+      plataformaFavorita: user.value.publicMetadata?.plataformaFavorita || 'PC',
+      juegoFavorito: user.value.publicMetadata?.juegoFavorito || 'FIFA',
+      email: user.value.emailAddress || 'sinemail@correo.com',
+      avatar: user.value.profileImageUrl || '',
+    }),
+  })
+}
+
+// Llama a la función cuando el usuario inicie sesión
+watch(isSignedIn, (nuevoValor) => {
+  if (nuevoValor) syncUsuarioConBackend()
+})
 </script>
 
 <template>
@@ -19,14 +47,14 @@ import CookieConsent from './components/CookieConsent.vue';
   </header>
   <main>
     <!-- Sección principal de la aplicación -->
-        <section id="video">
-    <MainContent />
-        </section>
+    <section id="video">
+      <MainContent />
+    </section>
 
     <div class="main-flex">
       <!-- Sección de búsqueda de jugadores -->
       <section id="jugar">
-    <WindowsGame />
+        <WindowsGame />
       </section>
 
       <section id="como-jugar">
@@ -34,40 +62,53 @@ import CookieConsent from './components/CookieConsent.vue';
           <div class="instructions-col">
             <h2>Buscar compañer@s</h2>
             <ul>
-              <li>Usa los filtros para encontrar jugadores afines a tus intereses o juegos favoritos.</li>
+              <li>
+                Usa los filtros para encontrar jugadores afines a tus intereses o juegos favoritos.
+              </li>
               <li>Envía una solicitud a quien te gustaría conocer y empieza a chatear.</li>
-              <li>Después de jugar o chatear, podréis valorar la experiencia y dar feedback sobre vuestro compañero.</li>
+              <li>
+                Después de jugar o chatear, podréis valorar la experiencia y dar feedback sobre
+                vuestro compañero.
+              </li>
             </ul>
           </div>
           <div class="instructions-col">
             <h2>Normas de la comunidad</h2>
             <ul>
-              <li>Respeta siempre a los demás jugadores. No se permite lenguaje ofensivo ni actitudes tóxicas.</li>
-              <li>El chat es para hablar sobre juegos, estrategias o quedar para jugar. ¡Evita el spam o mensajes fuera de lugar!</li>
-              <li>Si alguien rompe las normas, puede ser expulsado de la plataforma. Si ves algo fuera de lugar, repórtalo para que podamos actuar.</li>
+              <li>
+                Respeta siempre a los demás jugadores. No se permite lenguaje ofensivo ni actitudes
+                tóxicas.
+              </li>
+              <li>
+                El chat es para hablar sobre juegos, estrategias o quedar para jugar. ¡Evita el spam
+                o mensajes fuera de lugar!
+              </li>
+              <li>
+                Si alguien rompe las normas, puede ser expulsado de la plataforma. Si ves algo fuera
+                de lugar, repórtalo para que podamos actuar.
+              </li>
             </ul>
           </div>
         </div>
       </section>
     </div>
-        <section id="comunidad">
-          <!-- Sección de comentarios y valoraciones -->
-              <CustomComments />
-    <FormComment @nuevo-comentario="addComment" />
-        </section>
-
-
+    <section id="comunidad">
+      <!-- Sección de comentarios y valoraciones -->
+      <CustomComments />
+    </section>
   </main>
-    <!--Sección del caht en vivo y consentimiento de cookies-->
-      <LiveChat />
-      <CookieConsent />
+  <!--Sección del caht en vivo y consentimiento de cookies-->
+  <LiveChat />
+  <CookieConsent />
   <footer>
     <CustomFooter />
   </footer>
 </template>
 
 <style scoped>
-html, body, #app {
+html,
+body,
+#app {
   height: 100%;
   min-height: 100vh;
   margin: 0;
@@ -81,11 +122,13 @@ html, body, #app {
 }
 
 main {
-  flex: 1 1 0;
-  height: 100%;
+  width: 100vw;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .instructions-text {

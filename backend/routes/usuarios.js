@@ -1,153 +1,144 @@
 // Rutas para la gestión de usuarios en la plataforma.
 
-const express = require('express');
-const router = express.Router();
-const Usuario = require('../models/Usuario');
-const { Op } = require('sequelize');
-const clerkAuth = require('../middleware/clerkAuth');
-
-// Prueba directa de consulta
-Usuario.findAll().then(users => {
-  console.log('Usuarios en la base de datos:', users.length);
-}).catch(err => {
-  console.error('Error al consultar usuarios directamente:', err);
-});
-
-/**
- * @swagger
- * /api/usuarios:
- *   get:
- *     summary: Obtiene todos los usuarios
- *     tags: [Usuarios]
- *     responses:
- *       200:
- *         description: Lista de usuarios
- *   post:
- *     summary: Crea un nuevo usuario
- *     tags: [Usuarios]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *               edad:
- *                 type: integer
- *               idioma:
- *                 type: string
- *               region:
- *                 type: string
- *               plataformaFavorita:
- *                 type: string
- *               juegoFavorito:
- *                 type: string
- *               email:
- *                 type: string
- *               avatar:
- *                 type: string
- *     responses:
- *       201:
- *         description: Usuario creado
- */
+import express from 'express'
+const router = express.Router()
+import Usuario from '../models/Usuario.js'
+import { clerkAuth } from '../middleware/clerkAuth.js'
 
 // Obtener todos los usuarios (con filtros y paginación)
 router.get('/', async (req, res) => {
   try {
-    console.log('Entrando en GET /api/usuarios');
-    const { page = 1, limit = 10, region, plataformaFavorita } = req.query;
-    const where = {};
-    if (region) where.region = region;
-    if (plataformaFavorita) where.plataformaFavorita = plataformaFavorita;
-    console.log('Filtros:', where);
-    const usuarios = await Usuario.findAndCountAll({
-      where,
-      limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit)
-    });
-    console.log('Usuarios encontrados:', usuarios.rows.length);
-    res.json({
-      total: usuarios.count,
-      page: parseInt(page),
-      pages: Math.ceil(usuarios.count / limit),
-      data: usuarios.rows
-    });
-  } catch (err) {
-    console.error('Error en /api/usuarios:', err);
-    res.status(500).json({ error: 'Error al obtener usuarios' });
-  }
-});
+    const { juego, idioma, plataforma, region, nivel, page = 1, limit = 10 } = req.query
+    const where = {}
+    if (idioma) where.idioma = idioma
+    if (plataforma) where.plataformaFavorita = plataforma
+    if (region) where.region = region
+    if (nivel) where.nivel = nivel
 
-// Crear un nuevo usuario
+    let usuarios = await Usuario.findAll({ where })
+
+    // Coincidencias y orden
+    if (juego) {
+      usuarios = usuarios.map((u) => ({
+        ...u.toJSON(),
+        coincidencias: [
+          u.juegosFavoritos && u.juegosFavoritos.includes(juego) ? 100 : 0,
+          u.idioma === idioma ? 10 : 0,
+          u.plataformaFavorita === plataforma ? 5 : 0,
+          (u.region === region ? 1 : 0) + (u.nivel === nivel ? 1 : 0),
+        ].reduce((a, b) => a + b, 0),
+      }))
+      usuarios = usuarios.sort((a, b) => b.coincidencias - a.coincidencias)
+    }
+
+    // Paginación manual
+    const total = usuarios.length
+    const paged = usuarios.slice((page - 1) * limit, page * limit)
+
+    res.json({
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+      data: paged,
+    })
+  } catch (err) {
+    console.error('Error en /api/usuarios:', err)
+    res.status(500).json({ error: 'Error al obtener usuarios' })
+  }
+})
+
+// Crear un nuevo usuario desde Clerk
 router.post('/', async (req, res) => {
   try {
-    const { nombre, edad, idioma, region, plataformaFavorita, juegoFavorito, email, avatar } = req.body;
-    // Validación básica
-    if (!nombre || !edad || !idioma || !region || !plataformaFavorita || !juegoFavorito) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    console.log('Datos recibidos en POST /api/usuarios:', req.body) // <-- Añade esto
+    const {
+      clerkUserId,
+      email,
+      nombre,
+      avatar,
+      edad,
+      idioma,
+      region,
+      plataformaFavorita,
+      juegoFavorito,
+    } = req.body
+    if (!clerkUserId || !email || !nombre) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' })
     }
-    if (typeof edad !== 'number' || edad < 0) {
-      return res.status(400).json({ error: 'Edad no válida' });
+    let usuario = await Usuario.findOne({ where: { clerkUserId } })
+    if (!usuario) {
+      usuario = await Usuario.create({
+        clerkUserId,
+        email,
+        nombre,
+        avatar,
+        edad,
+        idioma,
+        region,
+        plataformaFavorita,
+        juegoFavorito,
+      })
     }
-    if (email) {
-      const usuarioExistente = await Usuario.findOne({ where: { email } });
-      if (usuarioExistente) {
-        return res.status(400).json({ error: 'El email ya está registrado' });
-      }
-    }
-    const usuario = await Usuario.create({ nombre, edad, idioma, region, plataformaFavorita, juegoFavorito, email, avatar });
-    res.status(201).json(usuario);
+    res.status(201).json(usuario)
   } catch (err) {
-    res.status(500).json({ error: 'Error al crear usuario' });
+    console.error('Error al crear usuario:', err) // <-- Añade esto
+    res.status(500).json({ error: 'Error al crear usuario' })
   }
-});
+})
 
 // Actualizar usuario
 router.put('/:id', async (req, res) => {
   try {
-    const usuario = await Usuario.findByPk(req.params.id);
-    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
-    await usuario.update(req.body);
-    res.json(usuario);
+    const usuario = await Usuario.findByPk(req.params.id)
+    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
+    await usuario.update(req.body)
+    res.json(usuario)
   } catch (err) {
-    res.status(500).json({ error: 'Error al actualizar usuario' });
+    console.error('Error al actualizar usuario:', err)
+    res.status(500).json({ error: 'Error al actualizar usuario' })
   }
-});
+})
 
 // Borrar usuario
 router.delete('/:id', async (req, res) => {
   try {
-    const usuario = await Usuario.findByPk(req.params.id);
-    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
-    await usuario.destroy();
-    res.json({ mensaje: 'Usuario eliminado' });
+    const usuario = await Usuario.findByPk(req.params.id)
+    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
+    await usuario.destroy()
+    res.json({ mensaje: 'Usuario eliminado' })
   } catch (err) {
-    res.status(500).json({ error: 'Error al eliminar usuario' });
+    console.error('Error al eliminar usuario:', err)
+    res.status(500).json({ error: 'Error al eliminar usuario' })
   }
-});
+})
 
-// Obtener perfil de usuario
+// Obtener perfil de usuario autenticado con Clerk
 router.get('/perfil', clerkAuth, async (req, res) => {
-  const clerkUserId = req.auth.userId;
-  let usuario = await Usuario.findOne({ where: { clerkUserId } });
+  try {
+    const clerkUserId = req.auth.userId
+    let usuario = await Usuario.findOne({ where: { clerkUserId } })
 
-  if (!usuario) {
-    usuario = await Usuario.create({
-      clerkUserId,
-      email: req.auth.sessionClaims.email,
-      nombre: req.auth.sessionClaims.first_name,
-      avatar: req.auth.sessionClaims.profile_image_url,
-      edad: req.auth.sessionClaims.age,
-      idioma: req.auth.sessionClaims.language,
-      region: req.auth.sessionClaims.region,
-      plataformaFavorita: req.auth.sessionClaims.favorite_platform,
-      juegoFavorito: req.auth.sessionClaims.favorite_game
-    });
+    // Clerk claims pueden no estar presentes, pon valores por defecto si faltan
+    const claims = req.auth.sessionClaims || {}
+    if (!usuario) {
+      usuario = await Usuario.create({
+        clerkUserId,
+        email: claims.email || '',
+        nombre: claims.first_name || '',
+        avatar: claims.profile_image_url || '',
+        edad: claims.age || null,
+        idioma: claims.language || '',
+        region: claims.region || '',
+        plataformaFavorita: claims.favorite_platform || '',
+        juegoFavorito: claims.favorite_game || '',
+      })
+    }
+
+    res.json(usuario)
+  } catch (err) {
+    console.error('Error en /api/usuarios/perfil:', err)
+    res.status(500).json({ error: 'Error al obtener perfil' })
   }
+})
 
-  res.json(usuario);
-});
-
-module.exports = router;
+export default router

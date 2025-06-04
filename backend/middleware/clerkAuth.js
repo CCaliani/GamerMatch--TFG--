@@ -1,3 +1,5 @@
-const { requireAuth } = require('@clerk/express');
+export function clerkAuth(req, res, next) {
 
-module.exports = requireAuth();
+  next()
+}
+

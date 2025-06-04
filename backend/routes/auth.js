@@ -1,11 +1,15 @@
+
 // Rutas de autenticación para registro e inicio de sesión de usuarios.
 
-const express = require('express');
-const router = express.Router();
-const Usuario = require('../models/Usuario');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import Usuario from '../models/Usuario.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
+const router = express.Router();
+
+
+import process from 'process';
 const SECRET = process.env.JWT_SECRET || 'secreto';
 
 /**
@@ -43,6 +47,7 @@ router.post('/register', async (req, res) => {
     const usuario = await Usuario.create({ nombre, email, password: hash, ...rest });
     res.status(201).json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error al registrar usuario' });
   }
 });
@@ -58,8 +63,8 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ id: usuario.id, email: usuario.email }, SECRET, { expiresIn: '7d' });
     res.json({ token });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 });
-
-module.exports = router;
+export default router;

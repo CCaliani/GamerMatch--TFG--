@@ -1,8 +1,8 @@
 // Rutas para la gestión de juegos en la plataforma.
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Juego = require('../models/Juego');
+import Juego from '../models/Juego.js';
 
 /**
  * @swagger
@@ -42,6 +42,7 @@ router.get('/', async (req, res) => {
     const juegos = await Juego.findAll();
     res.json(juegos);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error al obtener juegos' });
   }
 });
@@ -56,8 +57,9 @@ router.post('/', async (req, res) => {
     const juego = await Juego.create({ nombre, plataforma, genero, imagen });
     res.status(201).json(juego);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Error al crear juego' });
   }
 });
 
-module.exports = router;
+export default router;

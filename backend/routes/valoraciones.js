@@ -1,8 +1,8 @@
 // Rutas para la gestión de las valoraciones en la plataforma.
 
-const express = require('express');
-const router = express.Router();
-const Valoracion = require('../models/Valoracion');
+import { Router } from 'express'
+const router = Router()
+import Valoracion from '../models/Valoracion.js'
 
 /**
  * @swagger
@@ -56,30 +56,39 @@ const Valoracion = require('../models/Valoracion');
 // Obtener todas las valoraciones de un usuario
 router.get('/', async (req, res) => {
   try {
-    const { usuarioValoradoId } = req.query;
-    if (!usuarioValoradoId) return res.status(400).json({ error: 'usuarioValoradoId es requerido' });
-    const valoraciones = await Valoracion.findAll({ where: { usuarioValoradoId }, order: [['fecha', 'DESC']] });
-    res.json(valoraciones);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al obtener valoraciones' });
+    const { usuarioValoradoId } = req.query
+    if (!usuarioValoradoId) return res.status(400).json({ error: 'usuarioValoradoId es requerido' })
+    const valoraciones = await Valoracion.findAll({
+      where: { usuarioValoradoId },
+      order: [['fecha', 'DESC']],
+    })
+    res.json(valoraciones)
+  } catch {
+    res.status(500).json({ error: 'Error al obtener valoraciones' })
   }
-});
+})
 
 // Crear una nueva valoración
 router.post('/', async (req, res) => {
   try {
-    const { matchId, usuarioValoradorId, usuarioValoradoId, puntuacion, comentario } = req.body;
+    const { matchId, usuarioValoradorId, usuarioValoradoId, puntuacion, comentario } = req.body
     if (!matchId || !usuarioValoradorId || !usuarioValoradoId || !puntuacion) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+      return res.status(400).json({ error: 'Faltan campos obligatorios' })
     }
     if (puntuacion < 1 || puntuacion > 5) {
-      return res.status(400).json({ error: 'La puntuación debe estar entre 1 y 5' });
+      return res.status(400).json({ error: 'La puntuación debe estar entre 1 y 5' })
     }
-    const valoracion = await Valoracion.create({ matchId, usuarioValoradorId, usuarioValoradoId, puntuacion, comentario });
-    res.status(201).json(valoracion);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al crear valoración' });
+    const valoracion = await Valoracion.create({
+      matchId,
+      usuarioValoradorId,
+      usuarioValoradoId,
+      puntuacion,
+      comentario,
+    })
+    res.status(201).json(valoracion)
+  } catch {
+    res.status(500).json({ error: 'Error al crear valoración' })
   }
-});
+})
 
-module.exports = router;
+export default router

@@ -1,8 +1,9 @@
 // Rutas para la gestión de comentarios en la plataforma.
 
-const express = require('express');
+import express from 'express';
+import Comentario from '../models/Comentario.js';
+
 const router = express.Router();
-const Comentario = require('../models/Comentario');
 
 /**
  * @swagger
@@ -43,7 +44,7 @@ router.get('/', async (req, res) => {
   try {
     const comentarios = await Comentario.findAll();
     res.json(comentarios);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener comentarios' });
   }
 });
@@ -60,9 +61,8 @@ router.post('/', async (req, res) => {
     }
     const comentario = await Comentario.create({ usuario, texto, puntuacion });
     res.status(201).json(comentario);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al crear comentario' });
   }
 });
-
-module.exports = router;
+export default router;

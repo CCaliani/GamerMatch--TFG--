@@ -1,8 +1,8 @@
 // Modelo Sequelize para la entidad 'Valoracion'.
 // Representa las valoraciones realizadas entre usuarios después de un match.
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+import { DataTypes } from 'sequelize';
+import sequelize from '../db.js';
 
 // Definición del modelo Valoracion con sus campos y restricciones
 const Valoracion = sequelize.define('Valoracion', {
@@ -34,4 +34,4 @@ const Valoracion = sequelize.define('Valoracion', {
   tableName: 'valoraciones'
 });
 
-module.exports = Valoracion;
+export default Valoracion;

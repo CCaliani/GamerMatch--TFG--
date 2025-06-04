@@ -1,8 +1,8 @@
 // Modelo Sequelize para la entidad 'Notificacion'.
 // Representa las notificaciones enviadas a los usuarios sobre eventos relevantes.
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../db');
+import { DataTypes } from 'sequelize';
+import sequelize from '../db.js';
 
 // Definición del modelo Notificacion con sus campos y restricciones
 const Notificacion = sequelize.define('Notificacion', {
@@ -30,4 +30,4 @@ const Notificacion = sequelize.define('Notificacion', {
   tableName: 'notificaciones'
 });
 
-module.exports = Notificacion;
+export default Notificacion;

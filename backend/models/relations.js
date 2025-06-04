@@ -1,14 +1,14 @@
 // Definición de relaciones entre los modelos de la base de datos.
 // Establece las asociaciones entre usuarios, juegos, solicitudes, matchs, mensajes, valoraciones, notificaciones y comentarios.
 
-const Usuario = require('./Usuario');
-const Juego = require('./Juego');
-const Solicitud = require('./Solicitud');
-const Match = require('./Match');
-const Mensaje = require('./Mensaje');
-const Valoracion = require('./Valoracion');
-const Notificacion = require('./Notificacion');
-const Comentario = require('./Comentario');
+import Usuario from './Usuario.js';
+import Juego from './Juego.js';
+import Solicitud from './Solicitud.js';
+import Match from './Match.js';
+import Mensaje from './Mensaje.js';
+import Valoracion from './Valoracion.js';
+import Notificacion from './Notificacion.js';
+import Comentario from './Comentario.js';
 
 // Solicitudes
 Usuario.hasMany(Solicitud, { foreignKey: 'usuarioEmisorId', as: 'solicitudesEnviadas' });
