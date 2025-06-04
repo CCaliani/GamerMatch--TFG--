@@ -1,9 +1,13 @@
 // Rutas para la gestión de usuarios en la plataforma.
 
 import express from 'express'
-const router = express.Router()
 import Usuario from '../models/Usuario.js'
 import { clerkAuth } from '../middleware/clerkAuth.js'
+
+// importa tu middleware de autenticación si lo tienes
+// import authMiddleware from '../middlewares/auth.js';
+
+const router = express.Router()
 
 // Obtener todos los usuarios (con filtros y paginación)
 router.get('/', async (req, res) => {
@@ -140,5 +144,36 @@ router.get('/perfil', clerkAuth, async (req, res) => {
     res.status(500).json({ error: 'Error al obtener perfil' })
   }
 })
+
+// Actualizar perfil de usuario
+router.put(
+  '/api/usuarios/:id',
+  /*authMiddleware,*/ async (req, res) => {
+    const { id } = req.params
+    const { descripcion, avatar, juegosFavoritos, plataformaFavorita, idioma, region } = req.body
+
+    try {
+      // Busca el usuario por clerkUserId
+      const usuario = await Usuario.findOne({ where: { clerkUserId: id } })
+      if (!usuario) {
+        return res.status(404).json({ message: 'Usuario no encontrado' })
+      }
+
+      // Actualiza los campos editables
+      usuario.descripcion = descripcion
+      usuario.avatar = avatar
+      usuario.juegoFavorito = juegosFavoritos // Ojo: en tu modelo es 'juegoFavorito' (singular)
+      usuario.plataformaFavorita = plataformaFavorita
+      usuario.idioma = idioma
+      usuario.region = region
+
+      await usuario.save()
+
+      res.status(200).json({ message: 'Perfil actualizado' })
+    } catch {
+      res.status(500).json({ message: 'Error al actualizar perfil' })
+    }
+  },
+)
 
 export default router

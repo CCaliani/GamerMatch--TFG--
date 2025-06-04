@@ -1,51 +1,50 @@
 <script setup>
 //Componenete de la barra de navegación con el logo, enlaces y botón de inicio de sesión.
 
-  import { ref, computed, onMounted, onUnmounted } from 'vue';
-  import { useUser, SignInButton, UserButton } from '@clerk/vue';
-  import LoginButton from './icons/LoginButton.vue';
-  import EditarPerfil from './EditarPerfil.vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useUser, SignInButton, UserButton } from '@clerk/vue'
+import LoginButton from './icons/LoginButton.vue'
+import EditarPerfil from './EditarPerfil.vue'
 
-  const menuOpen = ref(false);
-  const scrolled = ref(false);
+const menuOpen = ref(false)
+const scrolled = ref(false)
+const notifications = ref([
+  '¡Tienes un nuevo mensaje!',
+  'Un usuario ha respondido a tu comentario.',
+  'Tu perfil ha sido actualizado.',
+])
+const hasNotifications = computed(() => notifications.value.length > 0)
+const showNotifications = ref(false)
 
-  const notifications = ref([
-    '¡Tienes un nuevo mensaje!',
-    'Un usuario ha respondido a tu comentario.',
-    'Tu perfil ha sido actualizado.'
-  ]);
-  const hasNotifications = computed(() => notifications.value.length > 0);
-  const showNotifications = ref(false);
+const mostrarEditarPerfil = ref(false)
 
-  const mostrarEditarPerfil = ref(false);
+function abrirPerfil() {
+  mostrarEditarPerfil.value = true
+}
 
-  function handleScroll() {
-    scrolled.value = window.scrollY > 10;
-  }
+function toggleNotifications() {
+  showNotifications.value = !showNotifications.value
+}
 
-  function abrirPerfil() {
-    mostrarEditarPerfil.value = true;
-  }
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 
-  function toggleNotifications() {
-    showNotifications.value = !showNotifications.value;
-  }
+function handleScroll() {
+  scrolled.value = window.scrollY > 10
+}
 
-  onMounted(() => {
-    window.addEventListener('scroll', handleScroll);
-  });
-  onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll);
-  });
-
-  const { user, isSignedIn } = useUser();
+const { user, isSignedIn } = useUser()
 </script>
 
 <template>
   <div :class="['navbar', { scrolled }]">
     <div class="navbar-logo">
       <a href="/">
-        <img src="../assets/images/logo.svg" alt="Logo" width="50" height="50"/>
+        <img src="../assets/images/logo.svg" alt="Logo" width="50" height="50" />
       </a>
     </div>
     <button class="hamburger" @click="menuOpen = !menuOpen" aria-label="Abrir menú">
@@ -60,16 +59,17 @@
     </nav>
     <div class="navbar-login">
       <template v-if="isSignedIn">
-        <UserButton
-          :user="user"
-          showName
-          @manageProfile="abrirPerfil"
+        <UserButton :user="user" showName />
+        <button class="clerk-custom-action" @click="abrirPerfil">✏️ Editar perfil</button>
+        <EditarPerfil
+          v-if="mostrarEditarPerfil"
+          @close="mostrarEditarPerfil = false"
+          @perfil-actualizado="mostrarEditarPerfil = false"
         />
-        <EditarPerfil v-if="mostrarEditarPerfil" @close="mostrarEditarPerfil = false" />
       </template>
       <template v-else>
         <SignInButton>
-          <LoginButton id="sign-in-button"/>
+          <LoginButton id="sign-in-button" />
         </SignInButton>
       </template>
     </div>
@@ -78,8 +78,10 @@
       <span class="notification-icon">🔔</span>
       <span v-if="hasNotifications" class="notification-dot"></span>
       <div v-if="showNotifications" class="notifications-dropdown">
-        <div v-if="notifications.length === 0" class="notification-empty">No hay notificaciones</div>
-        <div v-for="(notif, idx) in notifications.slice(0,5)" :key="idx" class="notification-item">
+        <div v-if="notifications.length === 0" class="notification-empty">
+          No hay notificaciones
+        </div>
+        <div v-for="(notif, idx) in notifications.slice(0, 5)" :key="idx" class="notification-item">
           {{ notif }}
         </div>
       </div>
@@ -174,7 +176,7 @@
   color: #743179;
   min-width: 220px;
   border-radius: 10px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
   z-index: 2000;
   padding: 10px 0;
 }
@@ -207,6 +209,22 @@
   border-radius: 2px;
   display: block;
 }
+.clerk-custom-action {
+  background: none;
+  border: none;
+  color: #b76dbd;
+  font-size: 0.9rem; /* Más pequeño */
+  padding: 4px 10px; /* Menos padding */
+  width: auto; /* Ajusta al contenido */
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-left: 8px;
+  transition: background 0.2s;
+}
+.clerk-custom-action:hover {
+  background: #f3e6fa;
+}
 
 /* Responsive para móvil */
 @media (max-width: 700px) {
@@ -227,7 +245,7 @@
     border-radius: 12px;
     display: none;
     z-index: 1000;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   }
   .navbar-links.open {
     display: flex;
@@ -259,7 +277,7 @@
     border-radius: 12px;
     display: none;
     z-index: 1000;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   }
   .navbar-links.open {
     display: flex;
@@ -272,4 +290,3 @@
   }
 }
 </style>
-

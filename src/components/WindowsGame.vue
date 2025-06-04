@@ -1,6 +1,6 @@
 <script setup>
 //Componente de pantalla de "juego" para buscar jugadores y mostrar detalles de un jugador específico.
-// Este componente incluye un formulario para filtrar jugadores por juego, plataforma, idioma, región y nivel.
+// Este componente incluye un formulario para filtrar jugadores por juego, plataforma, idioma y región.
 // También muestra detalles del jugador seleccionado y permite enviar una solicitud para hablar por el chat.
 
 import { ref } from 'vue'
@@ -12,14 +12,12 @@ const { jugadores, loading, error, buscarJugadores } = useJugadoresApi()
 const plataformas = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Móvil']
 const idiomas = ['Español', 'Inglés', 'Francés', 'Alemán', 'Italiano']
 const regiones = ['Europa', 'América', 'Asia', 'Oceanía', 'África']
-const niveles = ['Principiante', 'Intermedio', 'Avanzado', 'Experto']
 
 const filtros = ref({
   juego: '',
   plataforma: '',
   idioma: '',
   region: '',
-  nivel: '',
 })
 const currentIndex = ref(0)
 
@@ -84,13 +82,6 @@ async function enviarSolicitud(usuarioReceptorId) {
             <option v-for="r in regiones" :key="r" :value="r">{{ r }}</option>
           </select>
         </label>
-        <label>
-          Nivel:
-          <select v-model="filtros.nivel" name="nivel">
-            <option disabled selected value="">Selecciona un nivel</option>
-            <option v-for="n in niveles" :key="n" :value="n">{{ n }}</option>
-          </select>
-        </label>
         <CustomButton type="submit">Buscar</CustomButton>
       </form>
       <div v-if="loading">Buscando...</div>
@@ -140,20 +131,10 @@ async function enviarSolicitud(usuarioReceptorId) {
     <div class="player-info">
       <ul v-if="jugadores.length">
         <h2>Detalles del jugador</h2>
-
-        <li><strong>Juego:</strong>{{ jugadores[currentIndex].juegoFavoritos }}</li>
+        <li><strong>Juego: </strong>{{ jugadores[currentIndex].juegoFavorito }}</li>
         <li><strong>Plataforma:</strong> {{ jugadores[currentIndex].plataformaFavorita }}</li>
         <li><strong>Idioma:</strong> {{ jugadores[currentIndex].idioma }}</li>
         <li><strong>Región:</strong> {{ jugadores[currentIndex].region }}</li>
-        <li><strong>Nivel:</strong> {{ jugadores[currentIndex].nivel }}</li>
-        <li>
-          <strong>Juegos:</strong>
-          {{
-            Array.isArray(jugadores[currentIndex].juegos)
-              ? jugadores[currentIndex].juegos.join(', ')
-              : jugadores[currentIndex].juegos || ''
-          }}
-        </li>
       </ul>
       <CustomButton v-if="jugadores.length" @click="enviarSolicitud(jugadores[currentIndex].id)">
         Enviar solicitud
@@ -164,36 +145,42 @@ async function enviarSolicitud(usuarioReceptorId) {
       </div>
     </div>
   </div>
+  <div v-if="user">
+    <p>Descripción: {{ user.publicMetadata.descripcion }}</p>
+    <p>Juego favorito: {{ user.publicMetadata.juegoFavorito }}</p>
+    <p>Plataforma favorita: {{ user.publicMetadata.plataformaFavorita }}</p>
+    <p>Idioma: {{ user.publicMetadata.idioma }}</p>
+    <p>Región: {{ user.publicMetadata.region }}</p>
+  </div>
 </template>
 
 <style scoped>
 .main-flex {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
-  max-width: 100vw;
-  margin: 32px auto 0 auto;
   align-items: stretch;
   justify-content: center;
   min-height: 300px;
   box-sizing: border-box;
   padding: 0 16px;
-  overflow-x: hidden;
 }
 
 .search-settings,
 .player-info {
-  max-width: 320px;
-  flex: 0 1 320px;
+  max-width: 300px;
+  flex: 1 1 220px;
   min-width: 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .player-card {
   min-width: 0;
-  max-width: 480px;
-  flex: 1 1 0;
+  max-width: 520px;
+  flex: 2 1 0;
   width: 100%;
+  box-sizing: border-box;
   position: relative;
   display: flex;
   flex-direction: column;

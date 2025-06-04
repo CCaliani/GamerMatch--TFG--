@@ -1,110 +1,220 @@
 <!-- Componente de edición de perfil. -->
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useUser } from '@clerk/vue';
+import { ref, onMounted } from 'vue'
+import { useUser } from '@clerk/vue'
 
-const emit = defineEmits(['close']);
-const { user } = useUser();
+const emit = defineEmits(['close', 'perfil-actualizado'])
+const { user } = useUser()
 
-const descripcion = ref('');
-const avatar = ref('');
-const juegosFavoritos = ref('');
-const plataformaFavorita = ref('');
-const idioma = ref('');
-const region = ref('');
-const mensaje = ref('');
-const cargando = ref(false);
+const descripcion = ref('')
+const juegoFavorito = ref('')
+const plataformaFavorita = ref('')
+const idioma = ref('')
+const region = ref('')
+const mensaje = ref('')
+const cargando = ref(false)
+
+const plataformas = ['PlayStation', 'Xbox', 'PC', 'Nintendo Switch', 'Móvil']
+const idiomas = ['Español', 'Inglés', 'Alemán', 'Italiano', 'Francés']
+const regiones = ['Europa', 'Asia', 'América', 'Oceanía', 'África']
 
 // Cargar datos del usuario al abrir el modal
-onMounted(async () => {
-  cargando.value = true;
-  try {
-    const token = localStorage.getItem('token');
-    // Usa el id de Clerk como userId
-    const userId = user.value?.id;
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/usuarios/${userId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      descripcion.value = data.descripcion || '';
-      avatar.value = data.avatar || '';
-      juegosFavoritos.value = data.juegosFavoritos || '';
-      plataformaFavorita.value = data.plataformaFavorita || '';
-      idioma.value = data.idioma || '';
-      region.value = data.region || '';
-    }
-  } catch {
-    mensaje.value = 'Error al cargar perfil';
-  } finally {
-    cargando.value = false;
+onMounted(() => {
+  if (user.value) {
+    descripcion.value = user.value.publicMetadata.descripcion || ''
+    juegoFavorito.value = user.value.publicMetadata.juegoFavorito || ''
+    plataformaFavorita.value = user.value.publicMetadata.plataformaFavorita || ''
+    idioma.value = user.value.publicMetadata.idioma || ''
+    region.value = user.value.publicMetadata.region || ''
   }
-});
+})
 
 async function guardarPerfil() {
-  if (!descripcion.value || !plataformaFavorita.value || !idioma.value) {
-    mensaje.value = 'Por favor, completa los campos obligatorios.';
-    return;
+  if (!descripcion.value || !plataformaFavorita.value || !idioma.value || !region.value) {
+    mensaje.value = 'Por favor, completa los campos obligatorios.'
+    return
   }
-  cargando.value = true;
+  if (descripcion.value.length > 300) {
+    mensaje.value = 'La descripción no puede superar los 300 caracteres.'
+    return
+  }
+  cargando.value = true
   try {
-    const token = localStorage.getItem('token');
-    const userId = user.value?.id;
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/usuarios/${userId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
+    await user.value.update({
+      publicMetadata: {
         descripcion: descripcion.value,
-        avatar: avatar.value,
-        juegosFavoritos: juegosFavoritos.value,
+        juegoFavorito: juegoFavorito.value,
         plataformaFavorita: plataformaFavorita.value,
         idioma: idioma.value,
-        region: region.value
-      })
-    });
-    if (res.ok) {
-      mensaje.value = 'Perfil actualizado';
-      setTimeout(() => emit('close'), 1000);
-    } else {
-      mensaje.value = 'Error al actualizar perfil';
-    }
+        region: region.value,
+      },
+    })
+    mensaje.value = 'Perfil actualizado'
+    emit('perfil-actualizado')
+    setTimeout(() => emit('close'), 1000)
   } catch {
-    mensaje.value = 'Error al actualizar perfil';
+    mensaje.value = 'Error al actualizar perfil'
   } finally {
-    cargando.value = false;
+    cargando.value = false
   }
 }
 </script>
 
 <template>
-  <div class="editar-perfil-modal">
-    <h2>Editar perfil</h2>
-    <form @submit.prevent="guardarPerfil">
-      <label>Descripción:
-        <textarea v-model="descripcion" />
-      </label>
-      <label>Avatar (URL):
-        <input v-model="avatar" type="text" />
-      </label>
-      <label>Juegos favoritos:
-        <input v-model="juegosFavoritos" type="text" />
-      </label>
-      <label>Plataforma favorita:
-        <input v-model="plataformaFavorita" type="text" />
-      </label>
-      <label>Idioma:
-        <input v-model="idioma" type="text" />
-      </label>
-      <label>Región:
-        <input v-model="region" type="text" />
-      </label>
-      <button type="submit" :disabled="cargando">Guardar</button>
-      <button type="button" @click="$emit('close')">Cancelar</button>
-      <div v-if="mensaje">{{ mensaje }}</div>
-    </form>
+  <div class="modal-overlay">
+    <div class="editar-perfil-modal">
+      <h2>Editar perfil</h2>
+      <form @submit.prevent="guardarPerfil">
+        <label
+          >Descripción:*
+          <textarea
+            v-model="descripcion"
+            :disabled="cargando"
+            required
+            maxlength="300"
+            rows="3"
+            placeholder="Máximo 300 caracteres"
+          />
+          <small>{{ descripcion.length }}/300</small>
+        </label>
+        <label
+          >Juego favorito:
+          <input v-model="juegoFavorito" type="text" :disabled="cargando" />
+        </label>
+        <label
+          >Plataforma favorita:*
+          <select v-model="plataformaFavorita" :disabled="cargando" required>
+            <option disabled value="">Selecciona una plataforma</option>
+            <option v-for="p in plataformas" :key="p" :value="p">{{ p }}</option>
+          </select>
+        </label>
+        <label
+          >Idioma:*
+          <select v-model="idioma" :disabled="cargando" required>
+            <option disabled value="">Selecciona un idioma</option>
+            <option v-for="i in idiomas" :key="i" :value="i">{{ i }}</option>
+          </select>
+        </label>
+        <label
+          >Región:*
+          <select v-model="region" :disabled="cargando" required>
+            <option disabled value="">Selecciona una región</option>
+            <option v-for="r in regiones" :key="r" :value="r">{{ r }}</option>
+          </select>
+        </label>
+        <div class="modal-actions">
+          <button type="submit" :disabled="cargando">Guardar</button>
+          <button type="button" @click="$emit('close')" :disabled="cargando">Cancelar</button>
+        </div>
+        <div v-if="mensaje" :style="{ color: mensaje === 'Perfil actualizado' ? 'green' : 'red' }">
+          {{ mensaje }}
+        </div>
+        <small style="color: #888; display: block; margin-top: 10px; text-align: right">
+          Los campos con * son obligatorios.
+        </small>
+      </form>
+      <div v-if="cargando" class="modal-cargando">Guardando...</div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(40, 11, 87, 0.45);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.editar-perfil-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(40, 11, 87, 0.18);
+  padding: 32px 28px 24px 28px;
+  min-width: 320px;
+  max-width: 95vw;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  animation: modalIn 0.18s;
+  max-height: 90vh; /* Limita la altura máxima al 90% de la ventana */
+  overflow-y: auto; /* Habilita el scroll interno vertical */
+}
+@keyframes modalIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.editar-perfil-modal h2 {
+  margin-bottom: 10px;
+  color: #743179;
+  text-align: center;
+}
+.editar-perfil-modal label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  color: #743179;
+  margin-bottom: 10px;
+  gap: 4px;
+}
+.editar-perfil-modal input,
+.editar-perfil-modal textarea,
+.editar-perfil-modal select {
+  border: 1px solid #e0d6f5;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 1rem;
+  margin-top: 2px;
+  background: #f9f6fd;
+  color: #743179;
+  resize: none;
+}
+.editar-perfil-modal small {
+  color: #aaa;
+  font-size: 0.92em;
+  align-self: flex-end;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+.editar-perfil-modal button {
+  background: #743179;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.editar-perfil-modal button[type='button'] {
+  background: #e0d6f5;
+  color: #743179;
+}
+.editar-perfil-modal button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.modal-cargando {
+  text-align: center;
+  color: #743179;
+  margin-top: 10px;
+}
+</style>
