@@ -145,8 +145,8 @@ async function guardarPerfil() {
   gap: 16px;
   position: relative;
   animation: modalIn 0.18s;
-  max-height: 90vh; /* Limita la altura máxima al 90% de la ventana */
-  overflow-y: auto; /* Habilita el scroll interno vertical */
+  max-height: 90vh; 
+  overflow-y: auto;
 }
 @keyframes modalIn {
   from {

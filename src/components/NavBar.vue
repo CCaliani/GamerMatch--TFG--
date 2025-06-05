@@ -213,9 +213,9 @@ const { user, isSignedIn } = useUser()
   background: none;
   border: none;
   color: #b76dbd;
-  font-size: 0.9rem; /* Más pequeño */
-  padding: 4px 10px; /* Menos padding */
-  width: auto; /* Ajusta al contenido */
+  font-size: 0.9rem;
+  padding: 4px 10px;
+  width: auto;
   text-align: left;
   cursor: pointer;
   border-radius: 6px;
@@ -230,6 +230,7 @@ const { user, isSignedIn } = useUser()
 @media (max-width: 700px) {
   .navbar {
     position: relative;
+    padding: 8px 8px;
   }
   .navbar-links {
     flex-direction: column;
@@ -256,12 +257,19 @@ const { user, isSignedIn } = useUser()
   .navbar-login {
     margin-left: 0;
   }
+  .navbar-logo img {
+    margin-left: 0;
+    width: 38px;
+    height: 38px;
+  }
+  .notification-icon {
+    font-size: 1.2rem;
+  }
 }
-
-/* Responsive para tablet */
 @media (max-width: 1024px) {
   .navbar {
     position: relative;
+    padding: 10px 10px;
   }
   .navbar-links {
     flex-direction: column;

@@ -3,7 +3,7 @@
 import { ref, onMounted, onUnmounted, nextTick, watch, computed } from 'vue'
 import { io } from 'socket.io-client'
 
-// No generes usuario invitado automáticamente
+
 const socket = io('http://localhost:3000')
 
 const isOpen = ref(false)
@@ -61,7 +61,7 @@ function getUserStatus(name) {
 
 function selectUser(u) {
   if (u.id === myId.value) {
-    selectedUser.value = null // Si te seleccionas a ti, vuelves al chat general
+    selectedUser.value = null 
   } else {
     selectedUser.value = u
   }
@@ -375,5 +375,43 @@ onUnmounted(() => {
   margin: 8px 0 4px 0;
   font-size: 0.95rem;
   color: #fff;
+}
+
+@media (max-width: 700px) {
+  .chat-widget {
+    width: 98vw;
+    right: 1vw;
+    left: 1vw;
+    bottom: 8px;
+    border-radius: 10px 10px 6px 6px;
+    min-width: 0;
+    max-width: 99vw;
+  }
+  .chat-widget.open {
+    height: 70vh;
+    min-height: 320px;
+    max-height: 80vh;
+  }
+  .chat-header {
+    font-size: 1rem;
+    padding: 10px 10px;
+  }
+  .chat-body {
+    height: calc(70vh - 48px);
+    min-height: 220px;
+    max-height: 70vh;
+    padding: 0 2vw;
+  }
+  .chat-messages {
+    font-size: 0.95rem;
+    padding: 6px;
+  }
+  .chat-user {
+    font-size: 0.95rem;
+    padding: 2px 4px;
+  }
+  .chat-input {
+    padding: 4px;
+  }
 }
 </style>

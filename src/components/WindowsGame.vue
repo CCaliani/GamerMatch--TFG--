@@ -164,6 +164,8 @@ async function enviarSolicitud(usuarioReceptorId) {
   min-height: 300px;
   box-sizing: border-box;
   padding: 0 16px;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .search-settings,
@@ -189,6 +191,7 @@ async function enviarSolicitud(usuarioReceptorId) {
   border-radius: 12px;
   padding: 36px 24px;
   justify-content: center;
+  overflow-x: hidden;
 }
 
 .search-settings {
@@ -323,6 +326,11 @@ select {
   text-align: center;
   min-height: 180px;
 }
+.player-card.empty p {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
 .player-avatar.placeholder {
   width: 110px;
   height: 110px;
@@ -366,17 +374,20 @@ select {
   cursor: not-allowed;
 }
 .nav-arrow.left {
-  left: -12px; /* Más cerca del centro */
+  left: -12px; 
 }
 .nav-arrow.right {
-  right: -12px; /* Más cerca del centro */
+  right: -12px;
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .main-flex {
     flex-direction: column;
     gap: 18px;
     min-height: unset;
     height: auto;
+    padding: 0 2vw;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
   .search-settings,
   .player-card,
@@ -384,19 +395,64 @@ select {
     padding: 18px 8px;
     max-width: 100%;
     height: auto;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
   .player-card {
     flex-direction: column;
-  }
-}
-@media (max-width: 900px) {
-  .player-card {
-    flex-direction: column;
-    min-height: unset;
+    min-width: 0;
+    max-width: 100vw;
     padding: 18px 8px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   .nav-arrow {
     display: none !important;
+  }
+}
+@media (max-width: 700px) {
+  .main-flex {
+    flex-direction: column;
+    gap: 10px;
+    min-height: unset;
+    height: auto;
+    padding: 0 1vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  .search-settings,
+  .player-card,
+  .player-info {
+    padding: 10px 2vw;
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .player-card {
+    min-width: 0;
+    max-width: 100vw;
+    padding: 10px 2vw;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  .player-avatar,
+  .player-avatar.placeholder {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 10px;
+  }
+  .player-card h2 {
+    font-size: 1.2rem;
+  }
+  .player-desc {
+    font-size: 0.98rem;
+  }
+  .player-info h2 {
+    font-size: 1.1rem;
   }
 }
 </style>

@@ -119,15 +119,15 @@ onUnmounted(() => {
   will-change: transform;
 }
 
-/* Desliza a la izquierda */
+
 .comments-carousel.slide-left {
   transform: translateX(15%);
 }
-/* Desliza a la derecha */
+
 .comments-carousel.slide-right {
   transform: translateX(-15%);
 }
-/* Estado normal */
+
 .comments-carousel:not(.slide-left):not(.slide-right) {
   transform: translateX(0);
 }
@@ -204,6 +204,10 @@ onUnmounted(() => {
 }
 
 @media (max-width: 900px) {
+  .comments-section {
+    padding: 1.2rem 0;
+    border-radius: 10px;
+  }
   .comments-carousel {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -216,11 +220,23 @@ onUnmounted(() => {
     min-width: 220px;
     max-width: 80vw;
     scroll-snap-align: center;
+    font-size: 1rem;
+    padding: 1.2rem 0.8rem;
+    min-height: 120px;
+    max-height: 160px;
   }
 }
 @media (max-width: 700px) {
   .arrow {
     display: none !important;
+  }
+  .comments-section {
+    padding: 0.5rem 0;
+    border-radius: 6px;
+  }
+  .comments-carousel {
+    gap: 0.5rem;
+    width: 99vw;
   }
 }
 </style>

@@ -37,7 +37,6 @@
   width: 95%;
   display: flex;
   align-items: center;
-
 }
 
 .game-instructions img {
@@ -50,17 +49,41 @@
   margin: 0 auto;
 }
 
-
-
 /* Responsive: en móvil, vuelve a columna */
+@media (max-width: 900px) {
+  .welcome-text {
+    margin-top: 60px;
+  }
+  .welcome-text h1 {
+    font-size: 1.6rem;
+  }
+  .game-instructions {
+    max-width: 98vw;
+    padding: 10px;
+  }
+  .game-instructions img {
+    max-width: 90vw;
+  }
+}
 @media (max-width: 700px) {
   .game-instructions {
     flex-direction: column;
     gap: 18px;
     text-align: center;
+    padding: 10px 2vw;
   }
   .instructions-text {
     text-align: center;
+  }
+  .welcome-text {
+    margin-top: 30px;
+    padding: 0 2vw;
+  }
+  .welcome-text h1 {
+    font-size: 1.2rem;
+  }
+  .welcome-text p {
+    font-size: 1rem;
   }
 }
 </style>

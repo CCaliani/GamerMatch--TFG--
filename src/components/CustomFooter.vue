@@ -10,7 +10,7 @@
         <a href="#privacidad">Políticas de privacidad</a>
       </nav>
       <div class="footer-social">
-        <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+        <a href="www.linkedin.com/in/carlos-caliani-ferrandez-836888196" target="_blank" aria-label="LinkedIn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -24,7 +24,7 @@
             />
           </svg>
         </a>
-        <a href="https://github.com" target="_blank" aria-label="GitHub">
+        <a href="https://github.com/CCaliani/GamerMatch--TFG--" target="_blank" aria-label="GitHub">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -135,13 +135,38 @@
   font-size: 0.98rem;
   color: #ccc;
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
+  .footer {
+    padding: 18px 0 8px 0;
+  }
   .footer-links {
-    gap: 1rem;
+    gap: 1.2rem;
     font-size: 0.98rem;
   }
   .footer-social {
-    gap: 0.8rem;
+    gap: 1rem;
+  }
+}
+@media (max-width: 700px) {
+  .footer-links {
+    gap: 0.7rem;
+    font-size: 0.92rem;
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer-social {
+    gap: 0.7rem;
+    flex-wrap: wrap;
+  }
+  .icon {
+    width: 22px;
+    height: 22px;
+  }
+  .footer-content {
+    gap: 10px;
+  }
+  .footer {
+    padding: 10px 0 6px 0;
   }
 }
 </style>

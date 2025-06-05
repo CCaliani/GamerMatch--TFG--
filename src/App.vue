@@ -114,21 +114,31 @@ body,
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 #app {
   min-height: 100vh;
   box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 main {
-  width: 100vw;
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.main-flex {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .instructions-text {
@@ -143,12 +153,16 @@ main {
   gap: 32px;
   color: white;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .instructions-col {
   flex: 1 1 0;
-  min-width: 240px;
+  min-width: 0;
   max-width: 480px;
+  box-sizing: border-box;
 }
 
 .instructions-col h2 {
@@ -169,12 +183,43 @@ main {
 
 /* Responsive para móviles */
 @media (max-width: 900px) {
+  main {
+    max-width: 100%;
+    padding: 0 2vw;
+  }
+  .main-flex {
+    max-width: 100%;
+    padding: 0;
+  }
   .instructions-text {
     flex-direction: column;
     gap: 16px;
+    padding: 8px 2vw;
+    max-width: 100%;
   }
   .instructions-col {
     max-width: 100%;
+    min-width: 0;
+  }
+}
+@media (max-width: 700px) {
+  main {
+    max-width: 100%;
+    padding: 0 1vw;
+  }
+  .main-flex {
+    max-width: 100%;
+    padding: 0;
+  }
+  .instructions-text {
+    padding: 4px 1vw;
+    gap: 8px;
+    border-radius: 8px;
+    max-width: 100%;
+  }
+  .instructions-col {
+    min-width: 0;
+    max-width: 100vw;
   }
 }
 </style>
